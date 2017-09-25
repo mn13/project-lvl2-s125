@@ -1,6 +1,14 @@
+import fs from 'fs';
+import path from 'path';
 import _ from 'lodash';
+import parse from './parse';
 
-const genDiff = (content1, content2) => {
+const getContent = pathToFile => parse(fs.readFileSync(pathToFile, 'utf-8'), path.extname(pathToFile));
+
+const genDiff = (pathToFile1, pathToFile2) => {
+  const content1 = getContent(pathToFile1);
+  const content2 = getContent(pathToFile2);
+
   const union = _.union(Object.keys(content1), Object.keys(content2));
   const result = union.reduce((acc, key) => {
     if (content1[key] === content2[key]) {
