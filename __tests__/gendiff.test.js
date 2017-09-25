@@ -8,3 +8,9 @@ test('json', () => {
   const jsonDiff = genDiff(pathToFile1, pathToFile2);
   expect(jsonDiff).toEqual(expected);
 });
+test('yaml', () => {
+  const pathToFile1 = `${__dirname}/yaml/before.yaml`;
+  const pathToFile2 = `${__dirname}/yaml/after.yaml`;
+  const yamlDiff = genDiff(pathToFile1, pathToFile2);
+  expect(yamlDiff).toEqual(expected);
+});
