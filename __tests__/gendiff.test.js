@@ -14,3 +14,9 @@ test('yaml', () => {
   const yamlDiff = genDiff(pathToFile1, pathToFile2);
   expect(yamlDiff).toEqual(expected);
 });
+test('ini', () => {
+  const pathToFile1 = `${__dirname}/ini/before.ini`;
+  const pathToFile2 = `${__dirname}/ini/after.ini`;
+  const iniDiff = genDiff(pathToFile1, pathToFile2);
+  expect(iniDiff).toEqual(expected);
+});
