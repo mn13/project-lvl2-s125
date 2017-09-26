@@ -5,7 +5,7 @@
   "bin": {
     "gendiff": "dist/bin/gendiff.js"
   },
-  "main": "dist/genDiffLib.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "jest",
     "babel-node": "babel-node",
