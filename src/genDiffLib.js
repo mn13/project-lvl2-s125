@@ -2,14 +2,11 @@ import fs from 'fs';
 import path from 'path';
 import _ from 'lodash';
 import parse from './parse';
-// import compare from './compare';
-// import buildDiffItem from './buildDiffItem';
 
 const getContent = pathToFile => parse(fs.readFileSync(pathToFile, 'utf-8'), path.extname(pathToFile));
-// здесь диспетчер по типам: (или в билд)
 
 const status = {
-  saved: '', added: '+ ', removed: '- ', changed: '+- ',
+  saved: '  ', added: '+ ', removed: '- ', changed: '+- ',
 };
 
 const propertyActions = [
@@ -52,12 +49,13 @@ const genDiff = (content1, content2) => {
         { [`${getStatus}${key}`]: getProperty(content1[key], content2[key], genDiff) };
       return { ...acc, ...item };
     }, {});
-  console.log(diff);
+  // console.log(diff);
   return diff;
 };
-const formatDiff = diff =>
-  // если объект - просто toString для каждого элемента
-  `{\n    ${diff.join('\n  ')}\n}`;
+const formatDiff = diff => JSON.stringify(diff, null, 2)
+  .replace(/,/g, '')
+  .replace(/"/g, '');
+
 
 export default (pathToFile1, pathToFile2) => {
   const diff = genDiff(getContent(pathToFile1), getContent(pathToFile2));
