@@ -57,7 +57,6 @@ const genDiff = (content1, content2) => {
         type, getChildren(content1[key], content2[key], genDiff),
       );
     }, {});
-  // console.log(diff);
   return diff;
 };
 
@@ -65,14 +64,6 @@ const render = (diff) => {
   const signs = { saved: ' ', added: '+', removed: '-' };
 
   const getLine = (indent, sign, name, prop) => `${' '.repeat(indent)}${sign} ${name}: ${prop}`;
-  // const iter = (d, indent) => {
-  //   const res = Object.keys(d)
-  //     .reduce((acc, key) => {
-  //       const property = d[key] instanceof Object ? iter(d[key], next(indent)) : d[key];
-  //       return `${acc}${' '.repeat(indent)}${key}: ${property}\n`;
-  //     }, '');
-  //   return `{\n${res}${' '.repeat(indent - 2)}}`;
-  // };
   const iter = (d, indent) => {
     const lines = d.map((item) => {
       const {
@@ -80,18 +71,18 @@ const render = (diff) => {
       } = item;
 
       if (children.length > 0) {
-        return getLine(2, signs[type], name, iter(children));
+        return getLine(indent, signs[type], name, iter(children, indent + 4));
       }
       if (type === 'updated') {
-        return `${getLine(2, signs.added, name, property.after)}\n${getLine(2, signs.removed, name, property.before)}`;
+        return `${getLine(indent, signs.added, name, property.after)}\n${getLine(indent, signs.removed, name, property.before)}`;
       }
       if (property instanceof Object) {
         const parsedProp = Object.keys(property)
-          .map(key => getLine(2, signs.saved, key, property[key]));
-        return getLine(2, signs[type], name, `{\n${parsedProp.join('\n')}\n${' '.repeat(2)}}`);
+          .map(key => getLine(indent + 4, signs.saved, key, property[key]));
+        return getLine(indent, signs[type], name, `{\n${parsedProp.join('\n')}\n${' '.repeat(indent + 2)}}`);
       }
 
-      return getLine(2, signs[type], name, property);
+      return getLine(indent, signs[type], name, property);
     });
     return `{\n${lines.join('\n')}\n${' '.repeat(indent - 2)}}`;
   };
