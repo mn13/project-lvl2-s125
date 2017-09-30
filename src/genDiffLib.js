@@ -65,27 +65,37 @@ const render = (diff) => {
   const signs = { saved: ' ', added: '+', removed: '-' };
 
   const getLine = (indent, sign, name, prop) => `${' '.repeat(indent)}${sign} ${name}: ${prop}`;
+  // const iter = (d, indent) => {
+  //   const res = Object.keys(d)
+  //     .reduce((acc, key) => {
+  //       const property = d[key] instanceof Object ? iter(d[key], next(indent)) : d[key];
+  //       return `${acc}${' '.repeat(indent)}${key}: ${property}\n`;
+  //     }, '');
+  //   return `{\n${res}${' '.repeat(indent - 2)}}`;
+  // };
+  const iter = (d, indent) => {
+    const lines = d.map((item) => {
+      const {
+        name, property, type, children,
+      } = item;
 
-  const lines = diff.map((item) => {
-    const {
-      name, property, type, children,
-    } = item;
+      if (children.length > 0) {
+        return getLine(2, signs[type], name, iter(children));
+      }
+      if (type === 'updated') {
+        return `${getLine(2, signs.added, name, property.after)}\n${getLine(2, signs.removed, name, property.before)}`;
+      }
+      if (property instanceof Object) {
+        const parsedProp = Object.keys(property)
+          .map(key => getLine(2, signs.saved, key, property[key]));
+        return getLine(2, signs[type], name, `{\n${parsedProp.join('\n')}\n${' '.repeat(2)}}`);
+      }
 
-    if (children.length > 0) {
-      return getLine(2, signs[type], name, render(children));
-    }
-    if (type === 'updated') {
-      return `${getLine(2, signs.added, name, property.after)}\n${getLine(2, signs.removed, name, property.before)}`;
-    }
-    if (property instanceof Object) {
-      const parsedProp = Object.keys(property)
-        .map(key => getLine(2, signs.saved, key, property[key]));
-      return getLine(2, signs[type], name, `{\n${parsedProp.join('\n')}\n${' '.repeat(2)}}`);
-    }
-
-    return getLine(2, signs[type], name, property);
-  });
-  return `{\n${lines.join('\n')}\n}`;
+      return getLine(2, signs[type], name, property);
+    });
+    return `{\n${lines.join('\n')}\n${' '.repeat(indent - 2)}}`;
+  };
+  return iter(diff, 2);
 };
 
 
