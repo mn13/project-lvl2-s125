@@ -53,7 +53,8 @@ const genDiff = (content1, content2) => {
   return diff;
 };
 
-export default (pathToFile1, pathToFile2, format = 'default') => {
+export default (pathToFile1, pathToFile2, format) => {
+  console.log(format);
   const diff = genDiff(getContent(pathToFile1), getContent(pathToFile2));
   return render(diff, format);
 };
