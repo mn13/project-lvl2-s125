@@ -28,6 +28,9 @@ const flow = (diff, render) => {
 };
 
 export default (diff, format) => {
+  if (format === 'json') {
+    return JSON.stringify(diff).toString();
+  }
   if (format === 'plain') {
     return flow(diff, plain);
   }
