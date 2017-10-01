@@ -10,37 +10,32 @@ const propertyActions = [
   {
     check: (before, after) => before === after,
     type: 'saved',
-    getChildren: () => [],
-    getProperty: _.identity,
+    process: _.identity,
   },
   {
     check: (before, after) => before instanceof Object && after instanceof Object,
-    type: 'saved',
-    getChildren: (before, after, f) => f(before, after),
-    getProperty: (before, after) => ({ before, after }),
+    type: 'nested',
+    process: (before, after, f) => f(before, after),
   },
   {
     check: (before, after) => after === undefined,
     type: 'removed',
-    getChildren: () => [],
-    getProperty: _.identity,
+    process: _.identity,
   },
   {
     check: before => before === undefined,
     type: 'added',
-    getChildren: () => [],
-    getProperty: (before, after) => _.identity(after),
+    process: (before, after) => _.identity(after),
   },
   {
     check: (before, after) => before !== after,
     type: 'updated',
-    getChildren: () => [],
-    getProperty: (before, after) => ({ before, after }),
+    process: (before, after) => ({ before, after }),
   },
 ];
 
-const buildNode = (name, property, type, children) => ({
-  name, property, type, children,
+const buildNode = (name, type, property) => ({
+  name, type, property,
 });
 
 const getPropertyAction = (arg1, arg2) => _.find(propertyActions, ({ check }) => check(arg1, arg2));
@@ -51,12 +46,9 @@ const genDiff = (content1, content2) => {
   const diff = union
     .map((key) => {
       const {
-        type, getProperty, getChildren,
+        type, process,
       } = getPropertyAction(content1[key], content2[key]);
-      return buildNode(
-        key, getProperty(content1[key], content2[key]),
-        type, getChildren(content1[key], content2[key], genDiff),
-      );
+      return buildNode(key, type, process(content1[key], content2[key], genDiff));
     }, {});
   return diff;
 };
