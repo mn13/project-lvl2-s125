@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import _ from 'lodash';
 import parse from './parse';
-import render from './render';
+import render from './render/render';
 
 const getContent = pathToFile => parse(fs.readFileSync(pathToFile, 'utf-8'), path.extname(pathToFile));
 
@@ -55,5 +55,5 @@ const genDiff = (content1, content2) => {
 
 export default (pathToFile1, pathToFile2, format = 'default') => {
   const diff = genDiff(getContent(pathToFile1), getContent(pathToFile2));
-  return render[format](diff);
+  return render(diff, format);
 };
