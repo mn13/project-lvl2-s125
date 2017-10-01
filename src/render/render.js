@@ -1,13 +1,14 @@
 import * as def from './default';
+import * as plain from './plain';
 
 const flow = (diff, render) => {
   const iter = (d, acc) => {
-    const lines = d.map((item) => {
+    const lines = render.process(d, acc).map((item) => {
       const { type, name, property } = item;
       switch (type) {
         case 'nested': {
-          const childrenLines = iter(property, render.next(acc));
-          return render.getLineNested(name, childrenLines, acc);
+          const children = iter(property, render.next(acc, name));
+          return render.getLineNested(name, children, acc);
         }
         case 'updated':
           return render.getLineUpdated(name, property, acc);
@@ -18,12 +19,17 @@ const flow = (diff, render) => {
         case 'saved':
           return render.getLineSaved(name, property, acc);
         default:
-          return '';
+          return item;
       }
     });
-    return render.format(lines.join('\n'), acc);
+    return lines;
   };
-  return iter(diff, render.initial);
+  return iter(diff, render.initial).join('\n');
 };
 
-export default diff => flow(diff, def);
+export default (diff, format) => {
+  if (format === 'plain') {
+    return flow(diff, plain);
+  }
+  return flow(diff, def);
+};
