@@ -42,3 +42,18 @@ test('iniDeep', () => {
   const iniDiff = genDiff(beforeIniDeep, afterIniDeep);
   expect(iniDiff).toEqual(expectedDeep);
 });
+
+const expectedPlain = 'Property \'timeout\' was updated. From \'50\' to \'20\'\nProperty \'proxy\' was removed\nProperty \'verbose\' was added with value: true';
+
+test('plain', () => {
+  const diff = genDiff(beforeJson, afterJson, 'plain');
+  expect(diff).toEqual(expectedPlain);
+});
+
+const expectedPlainDeep = 'Property \'common.setting2\' was removed with value: 200\nProperty \'common.setting6\' was removed\nProperty \'common.setting4\' was removed\nProperty \'common.setting5\' was added with complex value\nProperty \'group1.baz\' was updated. From \'bars\' to \'bas\'\nProperty \'group2\' was removed\nProperty \'group3\' was added with complex value';
+
+
+test('plainDeep', () => {
+  const diff = genDiff(beforeJsonDeep, afterJsonDeep, 'plain');
+  expect(diff).toEqual(expectedPlainDeep);
+});
