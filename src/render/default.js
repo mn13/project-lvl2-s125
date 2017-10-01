@@ -1,5 +1,5 @@
 
-export const format = (rendered, indent) => `{\n${rendered}\n${' '.repeat(indent - 2)}}`;
+export const process = (diff, indent) => ['{', ...diff, `${' '.repeat(indent - 2)}}`];
 
 export const initial = 2;
 
@@ -20,7 +20,7 @@ const getLineCommon = (indent, sign, name, property) =>
     getLineObject(indent, property) : property);
 
 export const getLineNested = (name, property, indent) =>
-  getLine(indent, signs.saved, name, property);
+  getLine(indent, signs.saved, name, property.join('\n'));
 
 export const getLineUpdated = (name, property, indent) =>
   `${getLineCommon(indent, signs.added, name, property.after)}\n${getLineCommon(indent, signs.removed, name, property.before)}`;
