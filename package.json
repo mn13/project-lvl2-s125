@@ -1,6 +1,6 @@
 {
   "name": "gendiff-mna",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "Compares two configuration files and shows a difference",
   "bin": {
     "gendiff": "dist/bin/gendiff.js"
