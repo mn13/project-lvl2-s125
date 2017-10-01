@@ -50,7 +50,7 @@ test('plain', () => {
   expect(diff).toEqual(expectedPlain);
 });
 
-const expectedPlainDeep = 'Property \'common.setting2\' was removed with value: 200\nProperty \'common.setting6\' was removed\nProperty \'common.setting4\' was removed\nProperty \'common.setting5\' was added with complex value\nProperty \'group1.baz\' was updated. From \'bars\' to \'bas\'\nProperty \'group2\' was removed\nProperty \'group3\' was added with complex value';
+const expectedPlainDeep = 'Property \'common.setting2\' was removed\nProperty \'common.setting6\' was removed\nProperty \'common.setting4\' was added with value: \'blah blah\'\nProperty \'common.setting5\' was added with complex value\nProperty \'group1.baz\' was updated. From \'bas\' to \'bars\'\nProperty \'group2\' was removed\nProperty \'group3\' was added with complex value';
 
 
 test('plainDeep', () => {
